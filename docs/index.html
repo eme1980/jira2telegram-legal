@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentation — Telegram Bridge for Jira</title>
+<meta name="description" content="Setup guide and troubleshooting for Telegram Bridge for Jira: send Jira issue events to your Telegram chats.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' rx='22' fill='%23f5429b'/%3E%3Cpath d='M84 14 12 44l29 11 13 29Z' fill='%2314161a'/%3E%3Cpath d='M84 14 41 55l13 29Z' fill='%23ffffff'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --paper: #f7f6f3;
+    --surface: #fffdfa;
+    --ink: #14161a;
+    --ink-soft: #3a3d43;
+    --muted: #63656b;
+    --rule: #ddd8cf;
+    --accent: #f5429b;
+    --display: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
+    --body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--body); font-size: 17px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 46rem; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
+  .mark { width: 64px; height: 64px; display: block; }
+  .kicker { margin: 2rem 0 0; font-family: var(--display); font-style: italic; font-size: 1rem; color: var(--muted); }
+  h1 {
+    margin: .35rem 0 0; font-family: var(--display); font-weight: 500;
+    font-size: clamp(2.1rem, 6vw, 3rem); line-height: 1.05; letter-spacing: -.02em;
+  }
+  .lede { margin: 1.25rem 0 0; font-size: 1.15rem; line-height: 1.5; color: var(--ink-soft); max-width: 38ch; }
+  .meta { margin: 2rem 0 0; padding-bottom: 1.5rem; border-bottom: 1px solid var(--rule); font-size: .9rem; color: var(--muted); }
+  nav.toc { margin: 1.5rem 0 0; font-size: .95rem; }
+  nav.toc ol { margin: .35rem 0 0; padding-left: 1.15rem; }
+  h2 {
+    margin: 2.75rem 0 .5rem; font-family: var(--display); font-weight: 500;
+    font-size: 1.45rem; line-height: 1.2; letter-spacing: -.01em; color: var(--ink);
+  }
+  h2 .n { font-style: italic; font-size: .95rem; color: var(--muted); margin-right: .6rem; font-variant-numeric: tabular-nums; }
+  h3 { margin: 1.75rem 0 .35rem; font-size: 1.02rem; font-weight: 600; }
+  p, ul, ol { margin: .75rem 0 0; }
+  ul, ol { padding-left: 1.15rem; }
+  li { margin: .35rem 0; }
+  ol.steps { padding-left: 1.35rem; }
+  ol.steps > li { margin: .75rem 0; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .92em; background: #efece5; padding: .1em .35em; border-radius: 4px; word-break: break-word; }
+  pre { margin: 1rem 0 0; padding: 1rem 1.15rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; overflow-x: auto; }
+  pre code { background: none; padding: 0; font-size: .88rem; line-height: 1.55; }
+  a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  a:hover { background: #fbe3ef; }
+  table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: .95rem; }
+  th, td { text-align: left; vertical-align: top; padding: .6rem .75rem .6rem 0; border-bottom: 1px solid var(--rule); }
+  th { font-weight: 600; font-size: .82rem; color: var(--muted); }
+  .callout { margin: 1.5rem 0 0; padding: 1rem 1.15rem; background: var(--surface); border: 1px solid var(--rule); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; }
+  .callout p { margin: 0; }
+  .callout p + p { margin-top: .6rem; }
+  footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); font-size: .9rem; color: var(--muted); }
+  footer p { margin: .5rem 0 0; }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --surface: #1d2025; --ink: #eceef1; --ink-soft: #cfd3d9; --muted: #9aa0a8; --rule: #2c3037; }
+    code { background: #24282e; }
+    pre { background: #1d2025; }
+    a:hover { background: #3a1f2c; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <svg class="mark" viewBox="0 0 96 96" role="img" aria-label="Telegram Bridge for Jira">
+    <rect width="96" height="96" rx="22" fill="#f5429b" />
+    <path d="M84 14 12 44l29 11 13 29Z" fill="#14161a" />
+    <path d="M84 14 41 55l13 29Z" fill="#ffffff" />
+  </svg>
+
+  <p class="kicker">Documentation</p>
+  <h1>Telegram Bridge for Jira</h1>
+  <p class="lede">Jira issue events in your Telegram chats. One bot token, rules per project, no servers of your own.</p>
+  <p class="meta">Applies to version 3.0.0 and later · Jira Cloud · Last updated 20 November 2026</p>
+
+  <nav class="toc" aria-label="Contents">
+    <ol>
+      <li><a href="#what-it-does">What it does</a></li>
+      <li><a href="#before-you-start">Before you start</a></li>
+      <li><a href="#setup">Setup in five steps</a></li>
+      <li><a href="#rules">Rules: project, chat, events</a></li>
+      <li><a href="#messages">What the messages look like</a></li>
+      <li><a href="#troubleshooting">Troubleshooting</a></li>
+      <li><a href="#data">Data and privacy</a></li>
+      <li><a href="#support">Support</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="what-it-does"><span class="n">01</span>What it does</h2>
+  <p>When an issue changes in Jira Cloud, the app posts a message to a Telegram chat you choose. Three events are supported:</p>
+  <ul>
+    <li><strong>Issue created</strong> — <code>avi:jira:created:issue</code></li>
+    <li><strong>Issue updated</strong> — <code>avi:jira:updated:issue</code></li>
+    <li><strong>Issue transitioned</strong> — <code>avi:jira:issue:transitioned</code></li>
+  </ul>
+  <p>Notifications go one way only: Jira to Telegram. The app never writes to Jira, and it never reads your Telegram conversations.</p>
+  <p>If a project has no rule, the event is discarded without calling Telegram at all.</p>
+
+  <h2 id="before-you-start"><span class="n">02</span>Before you start</h2>
+  <table>
+    <tr><th>You need</th><th>Why</th></tr>
+    <tr><td>A Jira Cloud site where you are a <strong>site administrator</strong></td><td>The configuration panel lives in Jira settings, and only admins can install and configure the app.</td></tr>
+    <tr><td>A Telegram account</td><td>To create the bot and to be in the chat that receives the messages.</td></tr>
+    <tr><td>A chat for the notifications</td><td>A group is the usual choice, so the team reads them together. A private chat with the bot also works.</td></tr>
+  </table>
+  <p>There is nothing to host, no IP to allowlist and no Jira credential to copy: the app runs on Atlassian Forge.</p>
+
+  <h2 id="setup"><span class="n">03</span>Setup in five steps</h2>
+
+  <ol class="steps">
+    <li>
+      <h3>Create the bot</h3>
+      <p>Open <a href="https://t.me/BotFather" target="_blank" rel="noopener noreferrer">@BotFather</a> in Telegram, send <code>/newbot</code>, choose a display name and a username ending in <code>bot</code>. BotFather replies with a token that looks like <code>123456789:AAH…</code>.</p>
+      <p>Treat that token as a password: anyone who has it can post as your bot.</p>
+    </li>
+    <li>
+      <h3>Put the bot in the chat and find the chat id</h3>
+      <p>Add the bot to the group (or start a private conversation with it) and send it one message. Then read the chat id from Telegram itself:</p>
+      <pre><code>https://api.telegram.org/bot&lt;YOUR_TOKEN&gt;/getUpdates</code></pre>
+      <p>Look for the <code>chat.id</code> field in the response. Group and channel ids are <strong>negative</strong> and usually start with <code>-100</code>; a private chat id is a plain positive number. You can also ask <a href="https://t.me/userinfobot" target="_blank" rel="noopener noreferrer">@userinfobot</a>.</p>
+      <p>If the chat is a channel, the bot has to be an administrator with permission to post.</p>
+    </li>
+    <li>
+      <h3>Open the panel in Jira</h3>
+      <p>In Jira, go to <strong>Settings (⚙) → Apps → Jira2Telegram Bridge</strong>. The panel opens with the token form, your rules and the guide.</p>
+    </li>
+    <li>
+      <h3>Save the token and test the connection</h3>
+      <p>Paste the bot token and save. Then press <strong>Probar conexión</strong>: the app calls Telegram's <code>getMe</code> with the token it has stored, so a rejected token surfaces here instead of silently dropping every notification later. The token is stored encrypted in Atlassian's Forge Storage, scoped to your installation, and it is never shown again after saving.</p>
+    </li>
+    <li>
+      <h3>Create a rule and trigger it</h3>
+      <p>Add a rule: Jira project key, the destination chat id and the events you want. Save, then create or update an issue in that project. The message should arrive within seconds.</p>
+    </li>
+  </ol>
+
+  <div class="callout">
+    <p><strong>The panel is in Spanish.</strong> The interface and the notification labels are in Spanish in this version; the Marketplace listing and this documentation are in English. English interface strings are on the roadmap.</p>
+  </div>
+
+  <h2 id="rules"><span class="n">04</span>Rules: project, chat, events</h2>
+  <p>A rule maps <strong>one Jira project</strong> to <strong>one Telegram chat</strong> and a set of events. Several projects can point to the same chat, so a team can receive all its work in one place.</p>
+  <table>
+    <tr><th>Field</th><th>Notes</th></tr>
+    <tr><td>Project key</td><td>The short prefix of the issue key, for example <code>DEV</code> in <code>DEV-142</code>. Uppercase.</td></tr>
+    <tr><td>Chat id</td><td>Numeric id from step 2. Negative for groups and channels: <code>-1001234567890</code>.</td></tr>
+    <tr><td>Events</td><td>Any combination of created, updated and transitioned.</td></tr>
+  </table>
+  <p>Rules are validated before they are saved: a malformed token or chat id is rejected with a message instead of being stored. Deleting a rule asks for confirmation and stops the notifications for that project immediately.</p>
+
+  <h2 id="messages"><span class="n">05</span>What the messages look like</h2>
+  <p>Every message follows the same shape: an event label, the issue key as a link back to Jira, the summary, the assignee and the current status.</p>
+  <pre><code>🆕 Issue creado
+DEV-142
+Login fails on Safari after the last deploy
+👤 Miguel Pérez
+📍 In progress</code></pre>
+  <p>The text is sent as Telegram MarkdownV2, so the issue key is clickable and the content cannot break the message formatting.</p>
+
+  <h2 id="troubleshooting"><span class="n">06</span>Troubleshooting</h2>
+
+  <h3>Nothing arrives</h3>
+  <ul>
+    <li>Check the rule's project key against a real issue key. A rule for <code>DEV</code> never fires for <code>OPS-7</code>.</li>
+    <li>Press <strong>Probar conexión</strong>. If it fails, the token is wrong or was revoked in BotFather.</li>
+    <li>Check that the bot is still a member of the chat. If it was removed, Telegram answers with an error and the message is dropped.</li>
+    <li>Remember the app only sends for the events enabled in the rule. A comment on an issue is not one of them.</li>
+  </ul>
+
+  <h3>Telegram says "chat not found"</h3>
+  <ul>
+    <li>The bot has never been in that chat, or it was removed.</li>
+    <li>The id is wrong: groups need the negative id, and a positive id points to a private chat.</li>
+    <li>The chat is a channel where the bot is not an administrator.</li>
+  </ul>
+
+  <h3>Two messages for the same change</h3>
+  <p>A status change can produce more than one Jira event, and the app sends each enabled event it receives. If you only want one, narrow the rule's event list.</p>
+
+  <h3>Messages stop after a busy day</h3>
+  <p>Telegram applies rate limits per chat. A project with very high issue volume can hit them; spread the rules across more than one chat if that happens in your team.</p>
+
+  <h2 id="data"><span class="n">07</span>Data and privacy</h2>
+  <p>What the app stores, per installation, in Atlassian's Forge Storage: the Telegram bot token, the destination chat ids and the rules. It does not store issue content, names or email addresses.</p>
+  <p>The only outbound call goes to <code>api.telegram.org</code>. The message text carries the issue key, the summary, the status and the assignee's display name, because that is what the notification is for.</p>
+  <p>The full policy is published at <a href="https://eme1980.github.io/jira2telegram-legal/">https://eme1980.github.io/jira2telegram-legal/</a>.</p>
+
+  <h2 id="support"><span class="n">08</span>Support</h2>
+  <p>Email <a href="mailto:eme1980@gmail.com">eme1980@gmail.com</a>, in Spanish or English. First reply within two business days, from the developer who wrote the code. Please include your Jira site URL and, if a notification failed, the project key and the event.</p>
+
+  <footer>
+    <p>Telegram Bridge for Jira — an app for Jira Cloud, published on the Atlassian Marketplace by Miguel Pérez.</p>
+    <p><a href="https://eme1980.github.io/jira2telegram-legal/">Privacy policy</a></p>
+  </footer>
+
+</div>
+</body>
+</html>
